@@ -8,15 +8,15 @@ platform:
 
 steps:
 
-  - name: yarn
+  - name: npm install
     image: node:17-alpine
     commands:
-      - yarn
+      - npm install
 
-  - name: yarn lint
+  - name: npm run lint
     image: node:17-alpine
     commands:
-      - yarn lint
+      - npm run lint
 
   - name: npm publish
     image: node:17-alpine
@@ -42,12 +42,12 @@ platform:
 
 steps:
 
-  - name: yarn
+  - name: npm install
     image: node:17-alpine
     commands:
-      - yarn
+      - npm install
 
-  - name: yarn lint
+  - name: npm run lint
     image: node:17-alpine
     commands:
-      - yarn lint
+      - npm run lint
