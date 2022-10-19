@@ -1,4 +1,4 @@
-import fetch from "node-fetch";
+import axios from "axios";
 import {
   CommentReportResponse,
   CommentResponse,
@@ -728,20 +728,23 @@ export class LemmyHttp {
     form: MessageType
   ): Promise<ResponseType> {
     if (type_ == HttpType.Get) {
-      let getUrl = `${this.buildFullUrl(endpoint)}?${encodeGetParams(form)}`;
-      return fetch(getUrl, {
+      const url = `${this.buildFullUrl(endpoint)}?${encodeGetParams(form)}`;
+      return axios.request<any, ResponseType>({
+        url,
         method: "GET",
         headers: this.headers,
-      }).then(d => d.json() as Promise<ResponseType>);
+      });
     } else {
-      return fetch(this.buildFullUrl(endpoint), {
+      const url = this.buildFullUrl(endpoint);
+      return axios.request<any, ResponseType>({
+        url,
         method: type_,
         headers: {
           "Content-Type": "application/json",
           ...this.headers,
         },
-        body: JSON.stringify(form),
-      }).then(d => d.json() as Promise<ResponseType>);
+        data: form,
+      });
     }
   }
 }
