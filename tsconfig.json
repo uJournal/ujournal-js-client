@@ -2,15 +2,12 @@
   "compilerOptions": {
     "declaration": true,
     "declarationDir": "./dist",
-    "module": "CommonJS",
+    "module": "ES2015",
     "noImplicitAny": true,
-    "lib": ["es2017", "es7", "es6", "dom"],
+    "lib": ["dom", "es2015"],
     "outDir": "./dist",
-    "target": "ES5",
-    "moduleResolution": "Node"
+    "moduleResolution": "node"
   },
-  "include": [
-    "src/**/*"
-  ],
+  "include": ["src/**/*"],
   "exclude": ["node_modules", "dist"]
 }

@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios, { AxiosResponse } from "axios";
 import {
   CommentReportResponse,
   CommentResponse,
@@ -722,35 +722,32 @@ export class LemmyHttp {
     return `${this.apiUrl}${endpoint}`;
   }
 
+  private encodeGetParams<BodyType>(params: BodyType): string {
+    return Object.entries(params)
+      .map((kv) => kv.map(encodeURIComponent).join("="))
+      .join("&");
+  }
+
   private async wrapper<ResponseType, MessageType>(
-    type_: HttpType,
+    method: HttpType,
     endpoint: string,
-    form: MessageType
+    data: MessageType
   ): Promise<ResponseType> {
-    if (type_ == HttpType.Get) {
-      const url = `${this.buildFullUrl(endpoint)}?${encodeGetParams(form)}`;
-      return axios.request<any, ResponseType>({
+    const url = `${this.buildFullUrl(endpoint)}${
+      method === HttpType.Get
+        ? `?${this.encodeGetParams<MessageType>(data)}`
+        : ""
+    }`;
+    return (
+      await axios.request<any, AxiosResponse<ResponseType>>({
         url,
-        method: "GET",
-        headers: this.headers,
-      });
-    } else {
-      const url = this.buildFullUrl(endpoint);
-      return axios.request<any, ResponseType>({
-        url,
-        method: type_,
+        method,
         headers: {
           "Content-Type": "application/json",
           ...this.headers,
         },
-        data: form,
-      });
-    }
+        data: method !== HttpType.Get ? data : undefined,
+      })
+    ).data;
   }
-}
-
-function encodeGetParams(p: any): string {
-  return Object.entries(p)
-    .map(kv => kv.map(encodeURIComponent).join("="))
-    .join("&");
 }
